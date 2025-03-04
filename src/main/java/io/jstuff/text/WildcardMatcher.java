@@ -97,4 +97,20 @@ public class WildcardMatcher implements StringMatcher {
         return targetIndex == targetEnd;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof WildcardMatcher))
+            return false;
+        WildcardMatcher other = (WildcardMatcher)obj;
+        return pattern.equals(other.pattern) && singleMatchChar == other.singleMatchChar &&
+                multiMatchChar == other.multiMatchChar;
+    }
+
+    @Override
+    public int hashCode() {
+        return pattern.hashCode() ^ singleMatchChar ^ multiMatchChar;
+    }
+
 }

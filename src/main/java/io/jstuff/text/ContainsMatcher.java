@@ -1,5 +1,5 @@
 /*
- * @(#) SimpleMatcher.java
+ * @(#) ContainsMatcher.java
  *
  * string-matcher  String matching functions
  * Copyright (c) 2025 Peter Wall
@@ -27,33 +27,49 @@ package io.jstuff.text;
 
 import java.util.Objects;
 
-public class SimpleMatcher implements StringMatcher {
+public class ContainsMatcher implements StringMatcher {
 
     private final String string;
 
-    public SimpleMatcher(String string) {
+    public ContainsMatcher(String string) {
         this.string = Objects.requireNonNull(string, "String must not be null");
     }
 
     @Override
     public boolean matches(CharSequence target) {
-        Objects.requireNonNull(target, "Target must not be null");
-        int n = target.length();
-        if (n != string.length())
+        int count = string.length() - 1;
+        if (count < 0)
+            return true; // degenerate case; empty string
+        int lastIndex = target.length() - string.length();
+        if (lastIndex < 0)
             return false;
-        for (int i = 0; i < n; i++)
-            if (target.charAt(i) != string.charAt(i))
+        int i = 0;
+        char firstChar = string.charAt(0);
+        while (i <= lastIndex) {
+            int j = indexOf(target, firstChar, i, lastIndex);
+            if (j < 0)
                 return false;
-        return true;
+            i = j + 1;
+            if (StringMatcher.compareCS(target, i, string, 1, count))
+                return true;
+        }
+        return false;
+    }
+
+    private static int indexOf(CharSequence cs, char ch, int fromIndex, int lastIndex) {
+        for (int i = fromIndex; i <= lastIndex; i++)
+            if (cs.charAt(i) == ch)
+                return i;
+        return -1;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!(obj instanceof SimpleMatcher))
+        if (!(obj instanceof ContainsMatcher))
             return false;
-        return string.equals(((SimpleMatcher)obj).string);
+        return string.equals(((ContainsMatcher)obj).string);
     }
 
     @Override

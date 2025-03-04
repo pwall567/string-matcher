@@ -1,5 +1,5 @@
 /*
- * @(#) SimpleMatcher.java
+ * @(#) StartsWithMatcher.java
  *
  * string-matcher  String matching functions
  * Copyright (c) 2025 Peter Wall
@@ -27,33 +27,29 @@ package io.jstuff.text;
 
 import java.util.Objects;
 
-public class SimpleMatcher implements StringMatcher {
+public class StartsWithMatcher implements StringMatcher {
 
     private final String string;
 
-    public SimpleMatcher(String string) {
+    public StartsWithMatcher(String string) {
         this.string = Objects.requireNonNull(string, "String must not be null");
     }
 
     @Override
     public boolean matches(CharSequence target) {
-        Objects.requireNonNull(target, "Target must not be null");
-        int n = target.length();
-        if (n != string.length())
+        int stringLength = string.length();
+        if (target.length() < stringLength)
             return false;
-        for (int i = 0; i < n; i++)
-            if (target.charAt(i) != string.charAt(i))
-                return false;
-        return true;
+        return StringMatcher.compareCS(target, 0, string, 0, stringLength);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!(obj instanceof SimpleMatcher))
+        if (!(obj instanceof StartsWithMatcher))
             return false;
-        return string.equals(((SimpleMatcher)obj).string);
+        return string.equals(((StartsWithMatcher)obj).string);
     }
 
     @Override

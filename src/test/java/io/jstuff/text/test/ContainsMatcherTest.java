@@ -1,5 +1,5 @@
 /*
- * @(#) SimpleMatcher.java
+ * @(#) ContainsMatcherTest.java
  *
  * string-matcher  String matching functions
  * Copyright (c) 2025 Peter Wall
@@ -23,42 +23,38 @@
  * SOFTWARE.
  */
 
-package io.jstuff.text;
+package io.jstuff.text.test;
 
-import java.util.Objects;
+import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class SimpleMatcher implements StringMatcher {
+import io.jstuff.text.ContainsMatcher;
+import io.jstuff.text.StringMatcher;
 
-    private final String string;
+public class ContainsMatcherTest {
 
-    public SimpleMatcher(String string) {
-        this.string = Objects.requireNonNull(string, "String must not be null");
+    @Test
+    public void shouldMatchString() {
+        StringMatcher matcher = new ContainsMatcher("Fred");
+        assertTrue(matcher.matches("Fred"));
+        assertFalse(matcher.matches("FRED"));
+        assertTrue(matcher.matches("Freddy"));
+        assertTrue(matcher.matches("Mr Fred"));
     }
 
-    @Override
-    public boolean matches(CharSequence target) {
-        Objects.requireNonNull(target, "Target must not be null");
-        int n = target.length();
-        if (n != string.length())
-            return false;
-        for (int i = 0; i < n; i++)
-            if (target.charAt(i) != string.charAt(i))
-                return false;
-        return true;
+    @Test
+    public void shouldMatchStringWithRepeatedCharacters() {
+        StringMatcher matcher = new ContainsMatcher("0001");
+        assertTrue(matcher.matches("000000000000000001"));
+        assertFalse(matcher.matches("000000000000000000"));
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof SimpleMatcher))
-            return false;
-        return string.equals(((SimpleMatcher)obj).string);
-    }
-
-    @Override
-    public int hashCode() {
-        return string.hashCode();
+    @Test
+    public void shouldMatchStringWithSingleCharacter() {
+        StringMatcher matcher = new ContainsMatcher("5");
+        assertTrue(matcher.matches("1234567890"));
+        assertFalse(matcher.matches("9999999999"));
     }
 
 }

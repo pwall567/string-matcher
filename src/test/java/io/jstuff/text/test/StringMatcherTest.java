@@ -40,10 +40,28 @@ import io.jstuff.text.StringMatcher;
 public class StringMatcherTest {
 
     @Test
+    public void shouldTakeLambdaAsMatcher() {
+        StringMatcher matcher = (cs) -> cs.length() == 4;
+        assertTrue(matcher.matches("Fred"));
+        assertTrue(matcher.matches("Free"));
+        assertFalse(matcher.matches("Freddy"));
+        assertFalse(matcher.matches("F"));
+    }
+
+    @Test
     public void shouldCreateWildcardMatcher() {
         StringMatcher matcher = StringMatcher.wildcard("Fre?");
         assertTrue(matcher.matches("Fred"));
         assertTrue(matcher.matches("Free"));
+        assertFalse(matcher.matches("Freddy"));
+    }
+
+    @Test
+    public void shouldCreateWildcardMatcherWithSpecifiedPatternCharacters() {
+        StringMatcher matcher = StringMatcher.wildcard("^Fre%", '%', '^');
+        assertTrue(matcher.matches("Fred"));
+        assertTrue(matcher.matches("Free"));
+        assertTrue(matcher.matches("Mr Fred"));
         assertFalse(matcher.matches("Freddy"));
     }
 
@@ -63,6 +81,33 @@ public class StringMatcherTest {
         assertTrue(matcher.matches("freD"));
         assertTrue(matcher.matches("FRED"));
         assertFalse(matcher.matches("Freddy"));
+    }
+
+    @Test
+    public void shouldCreateContainsMatcher() {
+        StringMatcher matcher = StringMatcher.contains("Fred");
+        assertTrue(matcher.matches("Fred"));
+        assertFalse(matcher.matches("FRED"));
+        assertTrue(matcher.matches("Freddy"));
+        assertTrue(matcher.matches("Mr Fred"));
+    }
+
+    @Test
+    public void shouldCreateStartsWithMatcher() {
+        StringMatcher matcher = StringMatcher.startsWith("Fred");
+        assertTrue(matcher.matches("Fred"));
+        assertFalse(matcher.matches("FRED"));
+        assertTrue(matcher.matches("Freddy"));
+        assertFalse(matcher.matches("Mr Fred"));
+    }
+
+    @Test
+    public void shouldCreateEndsWithMatcher() {
+        StringMatcher matcher = StringMatcher.endsWith("Fred");
+        assertTrue(matcher.matches("Fred"));
+        assertFalse(matcher.matches("FRED"));
+        assertFalse(matcher.matches("Freddy"));
+        assertTrue(matcher.matches("Mr Fred"));
     }
 
     @Test

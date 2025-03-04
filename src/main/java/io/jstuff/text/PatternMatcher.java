@@ -43,4 +43,18 @@ public class PatternMatcher implements StringMatcher {
         return matcher.find();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof PatternMatcher))
+            return false;
+        return pattern.equals(((PatternMatcher)obj).pattern);
+    }
+
+    @Override
+    public int hashCode() {
+        return pattern.hashCode();
+    }
+
 }

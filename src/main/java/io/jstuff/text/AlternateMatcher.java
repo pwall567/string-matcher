@@ -25,6 +25,7 @@
 
 package io.jstuff.text;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class AlternateMatcher implements StringMatcher {
@@ -44,6 +45,20 @@ public class AlternateMatcher implements StringMatcher {
             if (matcher.matches(target))
                 return true;
         return false;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof AlternateMatcher))
+            return false;
+        return Arrays.equals(matchers, ((AlternateMatcher)obj).matchers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(matchers);
     }
 
 }

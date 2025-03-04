@@ -1,5 +1,5 @@
 /*
- * @(#) SimpleMatcher.java
+ * @(#) EndsWithMatcherTest.java
  *
  * string-matcher  String matching functions
  * Copyright (c) 2025 Peter Wall
@@ -23,42 +23,24 @@
  * SOFTWARE.
  */
 
-package io.jstuff.text;
+package io.jstuff.text.test;
 
-import java.util.Objects;
+import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class SimpleMatcher implements StringMatcher {
+import io.jstuff.text.EndsWithMatcher;
+import io.jstuff.text.StringMatcher;
 
-    private final String string;
+public class EndsWithMatcherTest {
 
-    public SimpleMatcher(String string) {
-        this.string = Objects.requireNonNull(string, "String must not be null");
-    }
-
-    @Override
-    public boolean matches(CharSequence target) {
-        Objects.requireNonNull(target, "Target must not be null");
-        int n = target.length();
-        if (n != string.length())
-            return false;
-        for (int i = 0; i < n; i++)
-            if (target.charAt(i) != string.charAt(i))
-                return false;
-        return true;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof SimpleMatcher))
-            return false;
-        return string.equals(((SimpleMatcher)obj).string);
-    }
-
-    @Override
-    public int hashCode() {
-        return string.hashCode();
+    @Test
+    public void shouldMatchString() {
+        StringMatcher matcher = new EndsWithMatcher("Fred");
+        assertTrue(matcher.matches("Fred"));
+        assertFalse(matcher.matches("FRED"));
+        assertFalse(matcher.matches("Freddy"));
+        assertTrue(matcher.matches("Mr Fred"));
     }
 
 }

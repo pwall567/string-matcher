@@ -51,7 +51,7 @@ The `StringMatcher` interface specifies a single function:
 
 - boolean matches(CharSequence target)
 
-This does exactly what would be expected, it returns true if the supplied string (specified as a `CharSequence`, so a
+This does exactly what would be expected; it returns `true` if the supplied string (specified as a `CharSequence`, so a
 `String`, a `StringBuilder` or any other class that implements `CharSequence` may be used) matches the conditions of the
 `StringMatcher`.
 
@@ -60,11 +60,19 @@ The interface also specifies a number of static functions to create the various 
 - `static SimpleMatcher simple(String string)` (creates a [`SimpleMatcher`](#simplematcher))
 - `static CaseInsensitiveMatcher caseInsensitive(String string)` (creates a
   [`CaseInsensitiveMatcher`](#caseinsensitivematcher))
+- `static ContainsMatcher contains(String pattern)` (creates a [`ContainsMatcher`](#containsmatcher))
+- `static StartsWithMatcher startsWith(String pattern)` (creates a [`StartsWithMatcher`](#startswithmatcher))
+- `static EndsWithMatcher endsWith(String pattern)` (creates a [`EndsWithMatcher`](#endswithmatcher))
 - `static WildcardMatcher wildcard(String pattern)` (creates a [`WildcardMatcher`](#wildcardmatcher))
+- `static WildcardMatcher wildcard(String pattern, char singleMatchChar, char multiMatchChar)` (creates a
+  [`WildcardMatcher`](#wildcardmatcher) with the specified pattern characters)
 - `static PatternMatcher pattern(Pattern pattern)` (creates a [`PatternMatcher`](#patternmatcher))
 - `static AlternateMatcher alternate(StringMatcher ... matchers)` (creates an [`AlternateMatcher`](#alternatematcher))
 - `static AlternateMatcher alternate(String ... strings)` (creates an [`AlternateMatcher`](#alternatematcher) with a
-  `SimpleMatcher` for each string)
+  [`SimpleMatcher`](#simplematcher) for each string)
+
+`StringMatcher` is a functional interface, so a lambda taking a `CharSequence` and returning a `boolean` may be used
+wherever a `SringMatcher` is called for.
 
 ### `SimpleMatcher`
 
@@ -84,6 +92,37 @@ This is the same as `SimpleMatcher` except that it performs a case-insensitive c
 
 The `CaseInsensitiveMatcher` may also be created by `StringMatcher.caseInsensitive(string)`.
 
+### `ContainsMatcher`
+
+The `ContainsMatcher` tests whether the string under test contains a given substring.
+```java
+        StringMatcher matcher = new ContainsMatcher("substring");
+```
+
+Note: the functionality of `ContainsMatcher` (and `StartsWithMatcher` and `EndsWithMatxher` below) can be achieved by
+using `WildcardMatcher`, but it is often clearer to use these explicit forms of `StringMatcher` (they are also slightly
+more efficient).
+
+The `ContainsMatcher` may also be created by `StringMatcher.contains(string)`.
+
+### `StartsWithMatcher`
+
+The `StartsWithMatcher` tests whether the string under test starts with a given substring.
+```java
+        StringMatcher matcher = new StartsWithMatcher("prefix");
+```
+
+The `StartsWithMatcher` may also be created by `StringMatcher.startsWith(string)`.
+
+### `EndsWithMatcher`
+
+The `EndsWithMatcher` tests whether the string under test ends with a given substring.
+```java
+        StringMatcher matcher = new EndsWithMatcher("suffix");
+```
+
+The `EndsWithMatcher` may also be created by `StringMatcher.endsWith(string)`.
+
 ### `WildcardMatcher`
 
 This form of `StringMatcher` performs a standard &ldquo;wildcard&rdqio; match, where a &ldquo;`?`&rdquo; will match any
@@ -102,7 +141,7 @@ The `WildcardMatcher` may also be created by `StringMatcher.wildcard(pattern)`.
 
 ### `PatternMatcher`
 
-This form of `StringMatcher` brings the full power of regular expression to the matching function:
+This form of `StringMatcher` brings the full power of regular expressions to the matching function:
 ```java
         StringMatcher matcher = new PatternMatcher(Pattern.compile("^File[0-9]{1,3}$"));
 ```
@@ -123,25 +162,25 @@ The `AlternateMatcher` may also be created by `StringMatcher.alternate(matcher, 
 
 ## Dependency Specification
 
-The latest version of the library is 1.0, and it may be obtained from the Maven Central repository.
+The latest version of the library is 1.1, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
       <groupId>io.jstuff</groupId>
       <artifactId>string-matcher</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'io.jstuff:string-matcher:1.0'
+    implementation 'io.jstuff:string-matcher:1.1'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("io.jstuff:string-matcher:1.0")
+    implementation("io.jstuff:string-matcher:1.1")
 ```
 
 Peter Wall
 
-2025-03-02
+2025-03-04

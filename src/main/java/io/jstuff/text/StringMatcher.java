@@ -57,6 +57,18 @@ public interface StringMatcher {
     }
 
     /**
+     * Create a {@link WildcardMatcher} with the given pattern and the specified wildcard characters.
+     *
+     * @param   pattern             the text pattern
+     * @param   singleMatchChar     the character used to represent a single character wildcard match in the pattern
+     * @param   multiMatchChar      the character used to represent a multi-character wildcard match in the pattern
+     * @return                      the {@link WildcardMatcher}
+     */
+    static WildcardMatcher wildcard(String pattern, char singleMatchChar, char multiMatchChar) {
+        return new WildcardMatcher(pattern, singleMatchChar, multiMatchChar);
+    }
+
+    /**
      * Create a {@link SimpleMatcher} with the given comparison string.
      *
      * @param   string  the comparison string
@@ -74,6 +86,36 @@ public interface StringMatcher {
      */
     static CaseInsensitiveMatcher caseInsensitive(String string) {
         return new CaseInsensitiveMatcher(string);
+    }
+
+    /**
+     * Create a {@link ContainsMatcher} with the given comparison string.
+     *
+     * @param   string  the comparison string
+     * @return          the {@link ContainsMatcher}
+     */
+    static ContainsMatcher contains(String string) {
+        return new ContainsMatcher(string);
+    }
+
+    /**
+     * Create a {@link StartsWithMatcher} with the given comparison string.
+     *
+     * @param   string  the comparison string
+     * @return          the {@link ContainsMatcher}
+     */
+    static StartsWithMatcher startsWith(String string) {
+        return new StartsWithMatcher(string);
+    }
+
+    /**
+     * Create an {@link EndsWithMatcher} with the given comparison string.
+     *
+     * @param   string  the comparison string
+     * @return          the {@link ContainsMatcher}
+     */
+    static EndsWithMatcher endsWith(String string) {
+        return new EndsWithMatcher(string);
     }
 
     /**
@@ -124,6 +166,28 @@ public interface StringMatcher {
         for (String string : strings)
             matchers[i++] = new SimpleMatcher(Objects.requireNonNull(string, "String must not be null"));
         return new AlternateMatcher(matchers);
+    }
+
+    /**
+     * Compare characters in two {@link CharSequence} objects.  No checking is performed on offsets or length; the
+     * caller is expected to have checked that all characters are within the bounds of the {@link CharSequence} objects,
+     * and that the objects will not be modified during the comparison in another thread.
+     *
+     * @param   cs1         the first {@link CharSequence}
+     * @param   offset1     the start offset within the first {@link CharSequence}
+     * @param   cs2         the second {@link CharSequence}
+     * @param   offset2     the start offset within the second {@link CharSequence}
+     * @param   count       the count of characters to compare
+     * @return              {@code true} if the characters are equal
+     */
+    static boolean compareCS(CharSequence cs1, int offset1, CharSequence cs2, int offset2, int count) {
+        int i = offset1;
+        int j = offset2;
+        int stopper = offset1 + count;
+        while (i < stopper)
+            if (cs1.charAt(i++) != cs2.charAt(j++))
+                return false;
+        return true;
     }
 
 }

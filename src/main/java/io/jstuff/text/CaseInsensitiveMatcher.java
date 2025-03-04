@@ -52,4 +52,18 @@ public class CaseInsensitiveMatcher implements StringMatcher {
         return true;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof CaseInsensitiveMatcher))
+            return false;
+        return string.equals(((CaseInsensitiveMatcher)obj).string);
+    }
+
+    @Override
+    public int hashCode() {
+        return string.hashCode();
+    }
+
 }
