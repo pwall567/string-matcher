@@ -29,17 +29,17 @@ The function could look something like this:
 
 The caller could supply, for example, a wildcard pattern:
 ```java
-        processFiles(fileList, SimpleMatcher.wildcard("File*.txt"));
+        processFiles(fileList, StringMatcher.wildcard("File*.txt"));
 ```
 Or a list of strings:
 ```java
-        processFiles(fileList, SimpleMatcher.alternate("File1.txt", "File2.txt"));
+        processFiles(fileList, StringMatcher.alternate("File1.txt", "File2.txt"));
 ```
 Or even a combination or the two:
 ```java
-        processFiles(fileList, SimpleMatcher.alternate(
-                SimpleMatcher.wildcard("File*.txt"),
-                SimpleMatcher.simple("README.txt")
+        processFiles(fileList, StringMatcher.alternate(
+                StringMatcher.wildcard("File*.txt"),
+                StringMatcher.simple("README.txt")
         ));
 ```
 
